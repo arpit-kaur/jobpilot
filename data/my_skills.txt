@@ -1,0 +1,11 @@
+C#
+.NET
+ASP.NET Core
+Entity Framework
+SQL Server
+Angular
+Python
+Azure
+Git
+REST
+LangChain

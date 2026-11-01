@@ -1,0 +1,17 @@
+Company: Prairie Mutual Insurance (fictional example)
+Role: AI Developer
+Location: Winnipeg, MB
+
+We are looking for an AI Developer to build assistants for our claims team.
+
+Requirements:
+- 3+ years of software development experience
+- Strong Python skills
+- Experience with LangChain or similar LLM frameworks
+- Building REST APIs
+- SQL Server or another relational database
+- Microsoft Azure
+- Docker and CI/CD pipelines
+
+Nice to have:
+- C# and .NET experience

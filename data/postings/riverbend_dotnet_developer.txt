@@ -1,0 +1,16 @@
+Company: Riverbend Software (fictional example)
+Role: .NET Developer
+Location: Winnipeg, MB (hybrid)
+
+Join our team building web applications for local businesses.
+
+Requirements:
+- C# and ASP.NET Core
+- Entity Framework and SQL Server
+- React with TypeScript
+- Git and pull request workflows
+- Azure DevOps
+
+Nice to have:
+- Docker
+- Python
