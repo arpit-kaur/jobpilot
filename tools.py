@@ -31,10 +31,14 @@ def read_posting(filename: str) -> str:
     """
     path = POSTINGS_DIR / filename
     if not path.exists():
-        available = [p.name for p in POSTINGS_DIR.glob("*.txt")]
-        return f"No posting called {filename}. Available postings: {available}"
+        word = Path(filename).stem.lower()
+        matches = [p for p in POSTINGS_DIR.glob("*.txt") if word in p.name.lower()]
+        if len(matches) == 1:
+            path = matches[0]
+        else:
+            available = [p.name for p in POSTINGS_DIR.glob("*.txt")]
+            return f"No posting called {filename}. Available postings: {available}"
     return path.read_text(encoding="utf-8")
-
 
 def compare_skills(posting_text: str) -> str:
     """Compare the skills a job posting asks for with my skills.
