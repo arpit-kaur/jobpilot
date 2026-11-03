@@ -14,6 +14,7 @@ KNOWN_SKILLS = [
     "C#", ".NET", "ASP.NET Core", "Entity Framework", "SQL Server",
     "Angular", "React", "TypeScript", "JavaScript", "Java", "Python",
     "Azure", "Docker", "Kubernetes", "Git", "REST", "CI/CD", "LangChain",
+    "AWS", "Node.js", "MongoDB", "Kotlin",
 ]
 
 
@@ -31,7 +32,7 @@ def read_posting(filename: str) -> str:
     """
     path = POSTINGS_DIR / filename
     if not path.exists():
-        word = Path(filename).stem.lower()
+        word = Path(filename).stem.lower().split("_")[0]
         matches = [p for p in POSTINGS_DIR.glob("*.txt") if word in p.name.lower()]
         if len(matches) == 1:
             path = matches[0]
@@ -40,11 +41,15 @@ def read_posting(filename: str) -> str:
             return f"No posting called {filename}. Available postings: {available}"
     return path.read_text(encoding="utf-8")
 
+
 def compare_skills(posting_text: str) -> str:
-    """Compare the skills a job posting asks for with my skills.
+    """Compare a job posting with my skills and return the match and missing skills.
+
+    My skills are already saved, so only the posting text is needed.
+    Use this after read_posting, passing the posting text it returned.
 
     Args:
-        posting_text: The full text of the job posting
+        posting_text: The full text of the job posting, as returned by read_posting
     """
     my_skills = SKILLS_FILE.read_text(encoding="utf-8").splitlines()
     my_skills = [skill.strip().lower() for skill in my_skills if skill.strip()]
