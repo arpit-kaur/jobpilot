@@ -37,3 +37,23 @@ So I changed the tool instead. If the file name is not exact but only one postin
 I also set the temperature to 0. Before that, every run gave a different answer, so it was hard to tell if my fix really worked.
 
 Biggest lesson today. Always check where an answer came from. An answer can look right and still be a guess.
+
+## Nov 2
+
+Today I asked the agent to do three things in one request. Read the prairie posting, check my skills against it and save it to my tracker. It took a lot longer than I planned.
+
+Llama asked for all three tools at the same time, before it had even read the posting. It gave the skill check nonsense and my code crashed. I changed the code so a wrong input goes back to the model as a message instead of crashing everything.
+
+Then I made the code run only one tool per round. That way the model has to wait for each result before it decides the next step.
+
+After that Llama only read the posting and then said it had compared my skills and saved the job. It did neither. There was no new row in my tracker. This one worried me the most because the answer sounded finished. Now the code prints the list of tools that really ran next to every answer. If the answer says saved but the list has no save tool, I see it right away.
+
+Llama also kept asking me for my skills. The tool reads them from a file by itself, but the tool description never said that. I added one line saying my skills are already saved.
+
+It still did not do all three steps, so I tried Qwen 2.5 on the same requests. Qwen read the posting, passed the full text to the skill check, got 78 percent and saved the job with the real company name from the posting. Same task and same prompt but a different model. I switched to Qwen.
+
+I also learned how easily prompts break. I changed one line to fix one request and it broke another one. I went back to the last version that worked.
+
+What works now. The greeting, finding the riverbend posting and the full read, compare and save task. What does not work yet. If I type the skills in my question, the model looks for a file instead of checking them. The final answer also only mentions the save and not the match. I will add tests before trying to fix these.
+
+I also ran my skill check on three real jobs I am interested in. Price came out at 75 percent, Affirm at 50 percent and Wawanesa at 29 percent. AWS was missing in two of the three. It also showed me where keyword matching falls short. Price asks for Azure or AWS and I have Azure, but the tool still counts AWS as missing. It also missed RESTful because it only looks for the exact word REST.
