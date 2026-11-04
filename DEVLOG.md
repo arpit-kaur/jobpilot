@@ -57,3 +57,17 @@ I also learned how easily prompts break. I changed one line to fix one request a
 What works now. The greeting, finding the riverbend posting and the full read, compare and save task. What does not work yet. If I type the skills in my question, the model looks for a file instead of checking them. The final answer also only mentions the save and not the match. I will add tests before trying to fix these.
 
 I also ran my skill check on three real jobs I am interested in. Price came out at 75 percent, Affirm at 50 percent and Wawanesa at 29 percent. AWS was missing in two of the three. It also showed me where keyword matching falls short. Price asks for Azure or AWS and I have Azure, but the tool still counts AWS as missing. It also missed RESTful because it only looks for the exact word REST.
+
+## Nov 3
+
+Today I rebuilt the same agent with LangGraph and kept my hand written version next to it. Same model, same prompt and same tools, so I could compare them fairly.
+
+Every part of LangGraph matched something I already wrote. The state is my message list. The tool node is my code that runs the tool. The arrow from the tools back to the model is my loop. The recursion limit is my max steps. Last week this all felt like magic. Now it just feels like a shorter way to write what I already built.
+
+The greeting, the riverbend posting and the skills question behaved the same in both versions. The three step request did not. In the LangGraph version the model read the posting and then came back with a completely empty answer.
+
+Instead of changing the prompt again I printed the whole reply. It had no text and no tool call, but it said the model had written 120 tokens. That is about the size of the posting. So the model most likely tried to pass the whole posting to the skill check and that request got lost somewhere between Ollama and LangChain.
+
+I added a small retry. If the reply comes back completely empty, the code asks the model to continue. That got it moving again. It ran the skill check and gave me the 78 percent match in the answer, which my first version never did. But it never ran the save tool and still said it saved the job. My tools actually used list showed it right away.
+
+So the same model acts differently depending on how the request is sent to it. For this project my hand written loop is the more reliable one. Next I want the code to catch false claims like this by itself instead of me reading the output.
