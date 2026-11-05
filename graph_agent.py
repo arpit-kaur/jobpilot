@@ -8,6 +8,7 @@ from langgraph.prebuilt import ToolNode, tools_condition
 
 from agent import MODEL, SYSTEM_PROMPT
 from tools import compare_skills, read_posting, save_application
+from guardrails import check_save_claim
 
 TOOLS = [read_posting, compare_skills, save_application]
 MAX_STEPS = 5
@@ -58,7 +59,7 @@ def run_agent(request):
 
     tools_used = [message.name for message in messages if message.type == "tool"]
     print(f"  Tools actually used: {tools_used}")
-    return messages[-1].content
+    return check_save_claim(messages[-1].content, tools_used)
 
 
 if __name__ == "__main__":

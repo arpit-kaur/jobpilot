@@ -1,6 +1,7 @@
 """JobPilot agent: the agent loop written by hand, no framework."""
 
 import ollama
+from guardrails import check_save_claim
 
 from tools import compare_skills, read_posting, save_application
 
@@ -13,6 +14,7 @@ TOOLS_BY_NAME = {
     "compare_skills": compare_skills,
     "save_application": save_application,
 }
+NEEDS_APPROVAL = {"save_application"}
 
 SYSTEM_PROMPT = (
     "You are JobPilot, an assistant that helps me with my job search. "
@@ -24,6 +26,12 @@ SYSTEM_PROMPT = (
     "If no tool is needed, just reply normally in one or two sentences, without mentioning tools. "
     "Use one tool at a time and wait for its result before using the next one. "
 )
+
+
+def approved(name, arguments):
+    """Ask me before running a tool that changes something."""
+    answer = input(f"  The model wants to run {name} with {arguments}. Approve? (y/n): ")
+    return answer.strip().lower() == "y"
 
 
 def run_agent(request):
@@ -54,7 +62,8 @@ def run_agent(request):
                 })
                 continue
             print(f"  Tools actually used: {tools_used}")
-            return reply.content, notebook
+            answer = check_save_claim(reply.content, tools_used)
+            return answer, notebook
 
         for call in calls:
             name = call.function.name
@@ -64,15 +73,17 @@ def run_agent(request):
             tool = TOOLS_BY_NAME.get(name)
             if tool is None:
                 result = f"There is no tool called {name}."
+            elif name in NEEDS_APPROVAL and not approved(name, arguments):
+                result = f"The user did not approve {name}, so it was not run. Nothing was saved."
             else:
                 try:
                     result = tool(**arguments)
+                    tools_used.append(name)
                 except TypeError as error:
                     result = f"Wrong inputs for {name}: {error}. Check the inputs and try again."
             print(f"  Result: {result[:100]}".replace("\n", " "))
 
             notebook.append({"role": "tool", "content": result, "tool_name": name})
-            tools_used.append(name)
 
     return f"Stopped after {MAX_STEPS} steps without a final answer.", notebook
 
