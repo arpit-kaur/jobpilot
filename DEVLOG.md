@@ -71,3 +71,17 @@ Instead of changing the prompt again I printed the whole reply. It had no text a
 I added a small retry. If the reply comes back completely empty, the code asks the model to continue. That got it moving again. It ran the skill check and gave me the 78 percent match in the answer, which my first version never did. But it never ran the save tool and still said it saved the job. My tools actually used list showed it right away.
 
 So the same model acts differently depending on how the request is sent to it. For this project my hand written loop is the more reliable one. Next I want the code to catch false claims like this by itself instead of me reading the output.
+
+## Nov 4
+
+Today was about making the agent safer without relying on the model to behave.
+
+First I fixed the problem from yesterday where the model said it saved a job when it did not. I wrote a small check in plain Python. After the model answers, the code looks for the word saved. If the answer says saved but the save tool never ran, it adds a warning saying nothing was saved. It ignores answers that say not saved, because those are honest.
+
+To make that check reliable I had to fix how I count tools. Before, a tool was added to the list as soon as the model asked for it. Now it only gets added after it actually runs.
+
+Then I added an approval step. Reading a posting and comparing skills do not change anything, so they run on their own. Saving writes to my tracker, so now the agent stops and asks me first. If I say no, the tool does not run and the model is told it was not approved.
+
+I also wrote my first tests with pytest. Six tests check the tools, like the whole word skill match, finding the riverbend posting from a close name and the 78 percent match on the prairie posting. One test saves a fake job, so I used a temporary file to keep my real tracker clean. Three more tests check the warning for false save claims. None of the tests use the model, so they run in under a second and give the same result every time.
+
+Last I set up GitHub Actions. Every time I push, GitHub runs all 9 tests on a fresh Linux machine. The first run passed in about 10 seconds.
