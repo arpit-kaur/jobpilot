@@ -85,3 +85,13 @@ Then I added an approval step. Reading a posting and comparing skills do not cha
 I also wrote my first tests with pytest. Six tests check the tools, like the whole word skill match, finding the riverbend posting from a close name and the 78 percent match on the prairie posting. One test saves a fake job, so I used a temporary file to keep my real tracker clean. Three more tests check the warning for false save claims. None of the tests use the model, so they run in under a second and give the same result every time.
 
 Last I set up GitHub Actions. Every time I push, GitHub runs all 9 tests on a fresh Linux machine. The first run passed in about 10 seconds.
+
+## Nov 5
+
+Today was about getting the project ready for other people to see.
+
+I wrote the README and took a screenshot of a full run, from reading the posting to approving the save. The first screenshot cut off the missing skills, because the code only printed the first 100 characters of each result. I raised it to 130 so the full match line shows.
+
+Before making the repo public I checked that my real job postings and my tracker were never committed, not even in old commits. They are in the gitignore and the history was clean.
+
+The repo is public now, with a description, topics and a test badge that updates on every push.
