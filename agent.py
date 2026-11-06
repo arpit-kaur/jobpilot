@@ -81,7 +81,7 @@ def run_agent(request):
                     tools_used.append(name)
                 except TypeError as error:
                     result = f"Wrong inputs for {name}: {error}. Check the inputs and try again."
-            print(f"  Result: {result[:100]}".replace("\n", " "))
+            print(f"  Result: {result[:130]}".replace("\n", " "))
 
             notebook.append({"role": "tool", "content": result, "tool_name": name})
 
